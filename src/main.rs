@@ -6,6 +6,7 @@ use axum::{
 use serde_json::json;
 use std::sync::{Arc, Mutex};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Clone)]
 struct AppState {
@@ -13,7 +14,14 @@ struct AppState {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
+struct CreateTest {
+    title: String,
+    subject: String,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
 struct Test {
+    id: Uuid,
     title: String,
     subject: String,
 }
@@ -58,12 +66,21 @@ async fn get_tests(
 
 async fn create_test(
     State(state): State<AppState>,
-    Json(payload): Json<Test>,
+    Json(mut payload): Json<CreateTest>,
 ) -> Json<serde_json::Value> {
 
-    state.tests.lock().unwrap().push(payload);
+    let test = Test {
+        id: Uuid::new_v4(),
+        title: payload.title,
+        subject: payload.subject,
+    };
+
+    let id = test.id;
+
+    state.tests.lock().unwrap().push(test);
 
     Json(json!({
         "message": "Test created",
+        "id": id
     }))
 }
