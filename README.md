@@ -1,6 +1,6 @@
 # Mini Test Server
 
-Minimal REST API built with [Axum](https://github.com/tokio-rs/axum) for creating, listing, updating, and deleting “tests”.
+Minimal REST API built with [Axum](https://github.com/tokio-rs/axum) for creating, listing, updating, and deleting “course tests”.
 
 Data is stored **in memory** (a `Vec<Test>` behind a `Mutex`) and will be lost when the server restarts.
 
